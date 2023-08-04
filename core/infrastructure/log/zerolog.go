@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	"github.com/rs/zerolog"
+	"github.com/smapig/go-ddd-sample/core/infrastructure/config"
 	"io"
 	"os"
 )
@@ -59,15 +60,16 @@ func (l *zeroLogger) Debugw(msg string, args ...interface{}) {
 	l.logger.Debug().Fields(args).Msg(msg)
 }
 
-func NewLogger(cfg LoggerConfig) Logger {
+func NewLogger(cfg config.AppConfig) Logger {
+	logCfg := cfg.Logger
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
-	if v, err := zerolog.ParseLevel(cfg.Level); err == nil {
+	if v, err := zerolog.ParseLevel(logCfg.Level); err == nil {
 		zerolog.SetGlobalLevel(v)
 	}
 
 	logWriter := func() io.Writer {
-		if cfg.Colorized {
+		if logCfg.Colorized {
 			return io.MultiWriter(zerolog.NewConsoleWriter())
 		}
 

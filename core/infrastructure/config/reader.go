@@ -10,8 +10,11 @@ func (r *SimpleReader) LoadConfiguration(configPath string) error {
 	return config.NewConfReader(configPath).Read(r.conf)
 }
 
-func NewReader(configPath string) SimpleReader {
-	return SimpleReader{
-		conf: &AppConfig{},
+func NewConfigProvider(configPath string) AppConfig {
+	r := SimpleReader{
+		conf: AppConfig{},
 	}
+
+	r.LoadConfiguration(configPath)
+	return r.conf
 }

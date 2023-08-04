@@ -1,5 +1,7 @@
 package log
 
+import "io"
+
 type Logger interface {
 	Error(args ...interface{})
 	Warn(args ...interface{})
@@ -17,7 +19,8 @@ type Logger interface {
 	Debugf(format string, args ...interface{})
 }
 
-type LoggerConfig struct {
-	Level     string
-	Colorized bool
+var writer *io.Writer
+
+func Writer() *io.Writer {
+	return writer
 }

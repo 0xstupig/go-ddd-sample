@@ -1,8 +1,10 @@
 package config
 
 type AppConfig struct {
-	Debug bool
-	Db    DatabaseConfig
+	Debug  bool
+	Db     DatabaseConfig
+	Logger LoggerConfig
+	Http   HttpConfig
 }
 
 type DatabaseConfig struct {
@@ -11,7 +13,18 @@ type DatabaseConfig struct {
 	Username      string `validate:"required"`
 	Password      string `validate:"required"`
 	Port          int    `default:"5432"`
-	RetryAttempts uint    `default:"3"`
+	RetryAttempts uint   `default:"3"`
+}
+
+type LoggerConfig struct {
+	Level     string
+	Colorized bool
+}
+
+type HttpConfig struct {
+	Port int `default:"2222"`
+	EnableLogGin bool `default:"true"`
+	GinMode string `default:"debug" validate:"eq=debug|eq=test|eq=release"`
 }
 
 type ConfigurationReader interface {
@@ -19,5 +32,5 @@ type ConfigurationReader interface {
 }
 
 type SimpleReader struct {
-	conf *AppConfig
+	conf AppConfig
 }
