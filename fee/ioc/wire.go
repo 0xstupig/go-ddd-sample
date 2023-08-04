@@ -6,11 +6,13 @@ package ioc
 import (
 	"github.com/smapig/go-ddd-sample/core/domain"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/config"
+	"github.com/smapig/go-ddd-sample/core/infrastructure/db"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/log"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/orm"
 	"github.com/smapig/go-ddd-sample/core/service/fee"
-	fee2 "github.com/smapig/go-ddd-sample/fee"
 	"github.com/smapig/go-ddd-sample/fee/controller"
+	db2 "github.com/smapig/go-ddd-sample/fee/db"
+	"github.com/smapig/go-ddd-sample/fee/wsgi"
 )
 import "github.com/google/wire"
 
@@ -44,9 +46,14 @@ func InitializeController(conf config.AppConfig, logger log.Logger, feeService f
 	return nil, nil
 }
 
-func InitializeServer(confPath string) (fee2.Server, error) {
-	wire.Build(fee2.NewServer,
+func InitializeServer(confPath string) (wsgi.Server, error) {
+	wire.Build(wsgi.NewServer,
 		InitializeConfig, InitializeLogger , InitializeController,
 		InitializeDbContext, InitializeGenericRepository, InitializeFeeService)
+	return nil, nil
+}
+
+func InitializeSqlMigrator(confPath string) (db.SqlMigrator, error) {
+	wire.Build(db2.NewFeeSqlMigrator, InitializeConfig, InitializeLogger, InitializeDbContext)
 	return nil, nil
 }

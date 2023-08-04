@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	gin2 "github.com/smapig/go-ddd-sample/core/hosting/gin"
+	gin2 "github.com/smapig/go-ddd-sample/core/infrastructure/hosting/gin"
 	"github.com/smapig/go-ddd-sample/core/service/fee"
 )
 
@@ -12,7 +12,7 @@ type FeeController interface {
 
 func (c controllerImpl) FeeCalculation(ctx *gin.Context) {
 	req := &fee.FeeCalculationRequestDto{}
-	if err := gin2.BindData(ctx, &req, gin2.BindType_JSON); err != nil {
+	if err := gin2.BindData(ctx, &req, gin2.BindType_Query); err != nil {
 		gin2.ResponseBadRequest(ctx, err)
 		return
 	}

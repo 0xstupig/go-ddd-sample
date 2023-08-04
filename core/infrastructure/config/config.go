@@ -1,7 +1,8 @@
 package config
 
 type AppConfig struct {
-	Debug  bool
+	Debug  bool `default:"true"`
+	Check  string
 	Db     DatabaseConfig
 	Logger LoggerConfig
 	Http   HttpConfig
@@ -17,14 +18,14 @@ type DatabaseConfig struct {
 }
 
 type LoggerConfig struct {
-	Level     string
-	Colorized bool
+	Level     string `default:"debug"`
+	Colorized bool   `default:"true"`
 }
 
 type HttpConfig struct {
-	Port int `default:"2222"`
-	EnableLogGin bool `default:"true"`
-	GinMode string `default:"debug" validate:"eq=debug|eq=test|eq=release"`
+	Port         int    `default:"2222"`
+	EnableLogGin bool   `default:"true"`
+	GinMode      string `default:"debug" validate:"eq=debug|eq=test|eq=release"`
 }
 
 type ConfigurationReader interface {

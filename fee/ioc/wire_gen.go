@@ -9,11 +9,13 @@ package ioc
 import (
 	"github.com/smapig/go-ddd-sample/core/domain"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/config"
+	"github.com/smapig/go-ddd-sample/core/infrastructure/db"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/log"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/orm"
 	"github.com/smapig/go-ddd-sample/core/service/fee"
-	fee2 "github.com/smapig/go-ddd-sample/fee"
 	"github.com/smapig/go-ddd-sample/fee/controller"
+	db2 "github.com/smapig/go-ddd-sample/fee/db"
+	"github.com/smapig/go-ddd-sample/fee/wsgi"
 )
 
 // Injectors from wire.go:
@@ -51,7 +53,7 @@ func InitializeController(conf config.AppConfig, logger log.Logger, feeService f
 	return controllerController, nil
 }
 
-func InitializeServer(confPath string) (fee2.Server, error) {
+func InitializeServer(confPath string) (wsgi.Server, error) {
 	appConfig, err := InitializeConfig(confPath)
 	if err != nil {
 		return nil, err
@@ -76,6 +78,23 @@ func InitializeServer(confPath string) (fee2.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	server := fee2.NewServer(logger, appConfig, controllerController)
+	server := wsgi.NewServer(logger, appConfig, controllerController)
 	return server, nil
+}
+
+func InitializeSqlMigrator(confPath string) (db.SqlMigrator, error) {
+	appConfig, err := InitializeConfig(confPath)
+	if err != nil {
+		return nil, err
+	}
+	logger, err := InitializeLogger(appConfig)
+	if err != nil {
+		return nil, err
+	}
+	dbContext, err := InitializeDbContext(logger, appConfig)
+	if err != nil {
+		return nil, err
+	}
+	sqlMigrator := db2.NewFeeSqlMigrator(dbContext)
+	return sqlMigrator, nil
 }

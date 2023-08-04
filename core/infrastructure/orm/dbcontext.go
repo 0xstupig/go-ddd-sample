@@ -27,7 +27,6 @@ func NewDBContext(logger log.Logger, cfg config.AppConfig) (DbContext, error) {
 	dbConf := cfg.Db
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
 		dbConf.Host, dbConf.Username, dbConf.Password, dbConf.DbName, dbConf.Port)
-
 	var (
 		db  *gorm.DB
 		err error

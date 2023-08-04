@@ -1,6 +1,7 @@
 package fee
 
 import (
+	"github.com/smapig/go-ddd-sample/core/domain/entity"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/config"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/log"
 	"github.com/smapig/go-ddd-sample/core/infrastructure/orm"
@@ -17,7 +18,18 @@ type feeServiceImpl struct {
 }
 
 func (f feeServiceImpl) FeeCalculation(data FeeCalculationRequestDto) (FeeCalculationResponseDto, error) {
-	return FeeCalculationResponseDto{}, nil
+	var fiatPaymentNetworks []entity.FiatPaymentNetwork
+	err := f.repo.GetBy(&fiatPaymentNetworks, map[string]interface{}{
+		"fee_value": "300",
+	}, -1, 0)
+
+	if err != nil {
+		return FeeCalculationResponseDto{}, err
+	}
+
+	return FeeCalculationResponseDto{
+		Fee: fiatPaymentNetworks[0].FeeValue,
+	}, nil
 }
 
 func NewFeeService(config config.AppConfig, logger log.Logger, repo orm.UnitOfWorkRepository) FeeService {

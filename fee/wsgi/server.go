@@ -1,4 +1,4 @@
-package main
+package wsgi
 
 import (
 	"github.com/smapig/go-ddd-sample/core/infrastructure/config"
