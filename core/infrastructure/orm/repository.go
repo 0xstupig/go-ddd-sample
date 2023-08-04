@@ -6,6 +6,6 @@ type Repository interface {
 	GetOne(target interface{}, filters map[string]interface{}, preloads ...string) error
 
 	Create(target interface{}) error
-	Update(id string, data interface{}) error
-	Delete(id string) error
+	Update(target interface{}) error
+	Delete(target interface{}) error
 }
