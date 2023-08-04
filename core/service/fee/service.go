@@ -18,8 +18,7 @@ type feeServiceImpl struct {
 }
 
 func (f feeServiceImpl) FeeCalculation(data FeeCalculationRequestDto) (FeeCalculationResponseDto, error) {
-	var fiatPaymentNetworks []entity.FiatPaymentNetwork
-	err := f.repo.GetBy(&fiatPaymentNetworks, map[string]interface{}{
+	res, err := f.repo.GetBy([]entity.FiatPaymentNetwork{}, map[string]interface{}{
 		"fee_value": "300",
 	}, -1, 0)
 
@@ -28,7 +27,7 @@ func (f feeServiceImpl) FeeCalculation(data FeeCalculationRequestDto) (FeeCalcul
 	}
 
 	return FeeCalculationResponseDto{
-		Fee: fiatPaymentNetworks[0].FeeValue,
+		Fee: res.([]entity.FiatPaymentNetwork)[0].FeeValue,
 	}, nil
 }
 

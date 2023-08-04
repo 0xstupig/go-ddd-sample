@@ -38,7 +38,8 @@ func (g genericRepository) GetAll(target interface{}, limit, offset int, preload
 	return g.HandleError(res)
 }
 
-func (g genericRepository) GetBy(target interface{}, filters map[string]interface{}, limit, offset int, preloads ...string) error {
+func (g genericRepository) GetBy(target interface{}, filters map[string]interface{}, limit, offset int,
+preloads ...string) (interface{}, error) {
 	g.logger.Debugf("Executing GetBy on %T", target)
 	queryBuilder := g.DbContextWithPreloads(preloads)
 
@@ -54,8 +55,8 @@ func (g genericRepository) GetBy(target interface{}, filters map[string]interfac
 		queryBuilder = queryBuilder.Offset(offset)
 	}
 
-	res := queryBuilder.Find(target)
-	return g.HandleError(res)
+	res := queryBuilder.Find(&target)
+	return target, g.HandleError(res)
 }
 
 func (g genericRepository) GetOne(target interface{}, filters map[string]interface{}, preloads ...string) error {
