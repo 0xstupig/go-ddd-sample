@@ -6,7 +6,6 @@ import (
 	"github.com/smapig/go-ddd-sample/core/infrastructure/config"
 	loggerMocks "github.com/smapig/go-ddd-sample/core/infrastructure/mock/log"
 	repoMocks "github.com/smapig/go-ddd-sample/core/infrastructure/mock/orm"
-	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"testing"
@@ -35,12 +34,21 @@ func (s *ServiceTestSuite) SetupTest() {
 }
 
 func (s *ServiceTestSuite) Test_FeeCalculation_Success() {
-	expectedQueryResult := []entity.FiatPaymentNetwork{
-		{FeeValue: "200"},
+	input := FeeCalculationRequestDto{
+		FromNetwork: "usd",
+		ToNetwork:   "ether",
 	}
-	s.repo.On("GetBy", []entity.FiatPaymentNetwork{}, mock.Anything, -1, 0).Return(expectedQueryResult, nil)
-	actual, err := s.service.FeeCalculation(FeeCalculationRequestDto{})
-	expected := FeeCalculationResponseDto{Fee: expectedQueryResult[0].FeeValue}
+	expectedFiatPaymentFees := []entity.FiatPaymentNetwork{
+		{FeeValue: "0.5"},
+	}
+	expected := FeeCalculationResponseDto{
+		Fee: "0.575",
+	}
+	s.repo.On("GetBy", []entity.FiatPaymentNetwork{}, map[string]interface{}{
+		"code": input.FromNetwork,
+	}, -1, 0).Return(expectedFiatPaymentFees, nil)
+
+	actual, err := s.service.FeeCalculation(input)
 	require.NoError(s.T(), err)
 	assert.Equal(s.T(), actual, expected)
 }

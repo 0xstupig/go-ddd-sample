@@ -1,7 +1,7 @@
 package fee
 
 type FeeCalculationRequestDto struct {
-	FromNetwork        string   `json:"from_network"`
+	FromNetwork        string   `json:"from_network" validate:"required"`
 	FromAmount         int      `json:"from_amount"`
 	FromAsset          string   `json:"from_asset"`
 	ToAsset            string   `json:"to_asset"`

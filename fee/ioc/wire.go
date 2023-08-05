@@ -48,7 +48,7 @@ func InitializeController(conf config.AppConfig, logger log.Logger, feeService f
 
 func InitializeServer(confPath string) (wsgi.Server, error) {
 	wire.Build(wsgi.NewServer,
-		InitializeConfig, InitializeLogger , InitializeController,
+		InitializeConfig, InitializeLogger, InitializeController,
 		InitializeDbContext, InitializeGenericRepository, InitializeFeeService)
 	return nil, nil
 }

@@ -2,7 +2,6 @@ package config
 
 type AppConfig struct {
 	Debug  bool `default:"true"`
-	Check  string
 	Db     DatabaseConfig
 	Logger LoggerConfig
 	Http   HttpConfig
